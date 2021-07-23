@@ -27,6 +27,7 @@ namespace Diplom.Controllers
         [Authorize]
         public async Task<IEnumerable<User>> Index()
         {
+            Console.WriteLine("_______________");
             return await repository.GetFriends(idUser);
         }
 

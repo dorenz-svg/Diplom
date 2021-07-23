@@ -1,10 +1,13 @@
+using Diplom.Infrastructure;
 using Diplom.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Diplom
@@ -31,40 +35,40 @@ namespace Diplom
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                   .AddJwtBearer(options =>
-                   {
-                       options.RequireHttpsMetadata = false;
-                       options.TokenValidationParameters = new TokenValidationParameters
-                       {
-                            // укзывает, будет ли валидироваться издатель при валидации токена
-                            ValidateIssuer = true,
-                            // строка, представляющая издателя
-                            ValidIssuer = AuthOptions.ISSUER,
-
-                            // будет ли валидироваться потребитель токена
-                            ValidateAudience = true,
-                            // установка потребителя токена
-                            ValidAudience = AuthOptions.AUDIENCE,
-                            // будет ли валидироваться время существования
-                            ValidateLifetime = true,
-
-                            // установка ключа безопасности
-                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                            // валидация ключа безопасности
-                            ValidateIssuerSigningKey = true,
-                       };
-                   });
-            services.AddControllers();
+            services.AddControllers(options => {
+                var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }
+            );
             services.AddDbContext<DBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<DBContext>();
+            var builder = services.AddIdentityCore<User>();
+            var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
+            identityBuilder.AddEntityFrameworkStores<DBContext>();
+            identityBuilder.AddSignInManager<SignInManager<User>>();
             services.AddTransient<IFriendsRepository,FriendsRepository>();
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Diplom", Version = "v1" });
             });
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+           .AddJwtBearer(
+                   opt =>
+                   {
+                       opt.RequireHttpsMetadata = false;
+                       opt.TokenValidationParameters = new TokenValidationParameters
+                       {
+                           ValidateIssuerSigningKey = true,
+                           IssuerSigningKey = key,
+                           ValidateLifetime = true,
+                           ValidateAudience = false,
+                           ValidateIssuer = false,
+                       };
+                   });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,7 +83,6 @@ namespace Diplom
 
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
