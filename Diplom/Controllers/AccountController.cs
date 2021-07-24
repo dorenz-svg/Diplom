@@ -18,18 +18,19 @@ namespace Diplom.Controllers
     [AllowAnonymous]
     public class AccountController:ControllerBase
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<MyUser> _userManager;
 
-        private readonly SignInManager<User> _signInManager;
+        private readonly SignInManager<MyUser> _signInManager;
         private readonly IJwtGenerator _jwtGenerator;
         private readonly DBContext _context;
-        public AccountController(UserManager<User>userManager,SignInManager<User> signInManager, IJwtGenerator jwtGenerator, DBContext context)
+        public AccountController(UserManager<MyUser>userManager,SignInManager<MyUser> signInManager, IJwtGenerator jwtGenerator, DBContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtGenerator = jwtGenerator;
             _context = context;
         }
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<AppUser>> LoginAsync(LoginQuery query)
         {
@@ -52,6 +53,7 @@ namespace Diplom.Controllers
 
             return Unauthorized();
         }
+        [AllowAnonymous]
         [HttpPost("registration")]
         public async Task<ActionResult<AppUser>> RegistrationAsync([FromBody]RegistrationQuery query)
         {
@@ -65,7 +67,7 @@ namespace Diplom.Controllers
                 return BadRequest("UserName already exist");
             }
 
-            var user = new User
+            var user = new MyUser
             {
                 Email = query.Email,
                 UserName = query.UserName

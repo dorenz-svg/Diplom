@@ -9,7 +9,7 @@ namespace Diplom.Models
     public interface IFriendsRepository
     {
         public Task DeleteFriend(string idUser,string idDelete);
-        public Task<IEnumerable<User>> GetFriends(string id);
+        public Task<IEnumerable<MyUser>> GetFriends(string id);
         public Task AddFriend(string idUser, string idFriend);
     }
 }

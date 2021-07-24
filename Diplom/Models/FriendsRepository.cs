@@ -21,13 +21,13 @@ namespace Diplom.Models
 
         public async Task DeleteFriend(string idUser, string idDelete)
         {
-            var id = context.Friends.Where(x => x.User1Id == idUser && x.User2Id==idDelete).Select(y => y.Id).FirstOrDefault();
-            context.Remove(id);
+            var id = context.Friends.Where(x => x.User1Id == idUser && x.User2Id==idDelete).FirstOrDefault();
+            context.Friends.Remove(id);
             await context.SaveChangesAsync();
 
         }
 
-        public async Task<IEnumerable<User>> GetFriends(string id)
+        public async Task<IEnumerable<MyUser>> GetFriends(string id)
         {
             var friends = context.Friends.Where(x => x.User1Id == id).Select(y => y.User2).ToList();
             return await Task.FromResult(friends);

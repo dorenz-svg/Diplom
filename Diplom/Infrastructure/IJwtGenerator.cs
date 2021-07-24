@@ -9,6 +9,6 @@ namespace Diplom.Infrastructure
 {
     public interface IJwtGenerator
     {
-        string CreateToken(User user);
+        string CreateToken(MyUser user);
     }
 }

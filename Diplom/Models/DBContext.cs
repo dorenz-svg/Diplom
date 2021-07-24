@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Diplom.Models
 {
-    public class DBContext:IdentityDbContext<User>
+    public class DBContext:IdentityDbContext<MyUser>
     {
         public DBContext(DbContextOptions<DBContext>options):base(options)
         {

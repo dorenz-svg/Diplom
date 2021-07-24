@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Diplom.Models
 {
-    public class User:IdentityUser
+    public class MyUser:IdentityUser
     {
-        public new long Id { get; set; }
         public IEnumerable<Friends> CurrentUser { get; set; }
         public IEnumerable<Friends> Friends { get; set; }
         

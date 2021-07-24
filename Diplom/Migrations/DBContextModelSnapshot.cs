@@ -41,7 +41,7 @@ namespace Diplom.Migrations
                     b.ToTable("Friends");
                 });
 
-            modelBuilder.Entity("Diplom.Models.User", b =>
+            modelBuilder.Entity("Diplom.Models.MyUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -239,11 +239,11 @@ namespace Diplom.Migrations
 
             modelBuilder.Entity("Diplom.Models.Friends", b =>
                 {
-                    b.HasOne("Diplom.Models.User", "User1")
+                    b.HasOne("Diplom.Models.MyUser", "User1")
                         .WithMany("CurrentUser")
                         .HasForeignKey("User1Id");
 
-                    b.HasOne("Diplom.Models.User", "User2")
+                    b.HasOne("Diplom.Models.MyUser", "User2")
                         .WithMany("Friends")
                         .HasForeignKey("User2Id");
 
@@ -263,7 +263,7 @@ namespace Diplom.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Diplom.Models.User", null)
+                    b.HasOne("Diplom.Models.MyUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -272,7 +272,7 @@ namespace Diplom.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Diplom.Models.User", null)
+                    b.HasOne("Diplom.Models.MyUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -287,7 +287,7 @@ namespace Diplom.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Diplom.Models.User", null)
+                    b.HasOne("Diplom.Models.MyUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -296,14 +296,14 @@ namespace Diplom.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Diplom.Models.User", null)
+                    b.HasOne("Diplom.Models.MyUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Diplom.Models.User", b =>
+            modelBuilder.Entity("Diplom.Models.MyUser", b =>
                 {
                     b.Navigation("CurrentUser");
 

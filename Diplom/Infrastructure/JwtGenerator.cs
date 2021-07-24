@@ -19,15 +19,18 @@ namespace Diplom.Infrastructure
         {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
-        public string CreateToken(User user)
+        public string CreateToken(MyUser user)
         {
-            var claims = new List<Claim> { new Claim(JwtRegisteredClaimNames.NameId, user.UserName) };
 
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(claims),
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                    new Claim(ClaimTypes.Name, user.UserName)
+        }),
                 Expires = DateTime.Now.AddDays(7),
                 SigningCredentials = credentials
             };

@@ -15,20 +15,16 @@ namespace Diplom.Controllers
     public class FriendsController : ControllerBase
     {
         private readonly IFriendsRepository repository;
-        private readonly string idUser;
         public FriendsController(IFriendsRepository repo)
         {
             repository = repo;
-            ClaimsPrincipal currentUser = User;
-            idUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
         // GET: FriendsController
         [HttpGet]
         [Authorize]
-        public async Task<IEnumerable<User>> Index()
+        public async Task<IEnumerable<MyUser>> Index()
         {
-            Console.WriteLine("_______________");
-            return await repository.GetFriends(idUser);
+            return await repository.GetFriends(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
 
         // POST: FriendsController/Create
@@ -42,11 +38,11 @@ namespace Diplom.Controllers
             }
             else
             {
-                await repository.AddFriend(idUser, id);
+                await repository.AddFriend(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, id);
                 return Ok();
             }
         }
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [Authorize]
         public async Task<ActionResult> Delete(string id)
         {
@@ -56,7 +52,7 @@ namespace Diplom.Controllers
             }
             else
             {
-                await repository.DeleteFriend(idUser, id);
+                await repository.DeleteFriend(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, id);
                 return Ok();
             }
         }

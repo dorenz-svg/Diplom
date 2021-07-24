@@ -35,20 +35,16 @@ namespace Diplom
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options => {
-                var policy = new AuthorizationPolicyBuilder()
-                        .RequireAuthenticatedUser()
-                        .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
-            }
-            );
+            services.AddControllers();
+
+
             services.AddDbContext<DBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            var builder = services.AddIdentityCore<User>();
+            var builder = services.AddIdentityCore<MyUser>();
             var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
             identityBuilder.AddEntityFrameworkStores<DBContext>();
-            identityBuilder.AddSignInManager<SignInManager<User>>();
-            services.AddTransient<IFriendsRepository,FriendsRepository>();
+            identityBuilder.AddSignInManager<SignInManager<MyUser>>();
+            services.AddTransient<IFriendsRepository, FriendsRepository>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddSwaggerGen(c =>
             {
