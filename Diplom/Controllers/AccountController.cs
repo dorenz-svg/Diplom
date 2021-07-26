@@ -1,14 +1,12 @@
 ﻿using Diplom.Infrastructure;
 using Diplom.Models;
+using Diplom.Models.Entities;
 using Diplom.Models.Query;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Diplom.Controllers
@@ -32,7 +30,7 @@ namespace Diplom.Controllers
         }
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> LoginAsync(LoginQuery query)
+        public async Task<ActionResult<object>> LoginAsync(LoginQuery query)
         {
             var user = await _userManager.FindByEmailAsync(query.Email);
             if (user == null)
@@ -44,7 +42,7 @@ namespace Diplom.Controllers
 
             if (result.Succeeded)
             {
-                return new AppUser
+                return new
                 {
                     UserName = user.UserName,
                     Token = _jwtGenerator.CreateToken(user)
@@ -55,7 +53,7 @@ namespace Diplom.Controllers
         }
         [AllowAnonymous]
         [HttpPost("registration")]
-        public async Task<ActionResult<AppUser>> RegistrationAsync([FromBody]RegistrationQuery query)
+        public async Task<ActionResult<object>> RegistrationAsync([FromBody]RegistrationQuery query)
         {
             if (await _context.Users.Where(x => x.Email == query.Email).AnyAsync())
             {
@@ -77,7 +75,7 @@ namespace Diplom.Controllers
 
             if (result.Succeeded)
             {
-                return new AppUser
+                return new
                 {
                     Token = _jwtGenerator.CreateToken(user),
                     UserName = user.UserName,

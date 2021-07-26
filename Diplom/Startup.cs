@@ -1,25 +1,20 @@
 using Diplom.Infrastructure;
 using Diplom.Models;
+using Diplom.Models.Entities;
+using Diplom.Models.Repositories.Abstract;
+using Diplom.Models.Repositories.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Diplom
 {
@@ -44,7 +39,8 @@ namespace Diplom
             var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
             identityBuilder.AddEntityFrameworkStores<DBContext>();
             identityBuilder.AddSignInManager<SignInManager<MyUser>>();
-            services.AddTransient<IFriendsRepository, FriendsRepository>();
+            services.AddTransient<IFriendsRepository, EFFriendsRepository>();
+            services.AddTransient<IUsersRepository, EFUsersRepository>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddSwaggerGen(c =>
             {

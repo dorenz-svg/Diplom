@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using Diplom.Models.Entities;
+using Diplom.Models.Repositories.Abstract;
+using Diplom.Models.Response;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Diplom.Models
+namespace Diplom.Models.Repositories.EntityFramework
 {
-    public class FriendsRepository : IFriendsRepository
+    public class EFFriendsRepository : IFriendsRepository
     {
         private readonly DBContext context;
-        public FriendsRepository(DBContext ctx) => context = ctx;
+        public EFFriendsRepository(DBContext ctx) => context = ctx;
 
         public async Task AddFriend(string idUser,string idFriend)
         {
@@ -27,9 +27,9 @@ namespace Diplom.Models
 
         }
 
-        public async Task<IEnumerable<MyUser>> GetFriends(string id)
+        public async Task<IEnumerable<FriendsResponse>> GetFriends(string id)
         {
-            var friends = context.Friends.Where(x => x.User1Id == id).Select(y => y.User2).ToList();
+            var friends = context.Friends.Where(x => x.User1Id == id).Select(y => y.User2).Select(x=> new FriendsResponse{ Id=x.Id,UserName=x.UserName}).ToList();
             return await Task.FromResult(friends);
         }
     }

@@ -1,13 +1,10 @@
-﻿using Diplom.Models;
+﻿using Diplom.Models.Repositories.Abstract;
+using Diplom.Models.Response;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-
 namespace Diplom.Controllers
 {
     [ApiController]
@@ -22,7 +19,7 @@ namespace Diplom.Controllers
         // GET: FriendsController
         [HttpGet]
         [Authorize]
-        public async Task<IEnumerable<MyUser>> Index()
+        public async Task<IEnumerable<FriendsResponse>> Index()
         {
             return await repository.GetFriends(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }

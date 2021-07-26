@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Diplom.Models
+namespace Diplom.Models.Response
 {
-    public class AppUser
+    public class FriendsResponse
     {
+        public string Id { get; set; }
         public string UserName { get; set; }
-
-        public string Token { get; set; }
     }
 }

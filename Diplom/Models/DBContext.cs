@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Diplom.Models.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Diplom.Models
 {
@@ -14,6 +10,8 @@ namespace Diplom.Models
         {
         }
         public DbSet<Friends> Friends { get; set; }
+        public DbSet<Dialogs> Dialogs { get; set; }
+        public DbSet<Messages> Messages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -25,6 +23,18 @@ namespace Diplom.Models
                 .HasOne(p => p.User2)
                 .WithMany(t => t.Friends)
                 .HasForeignKey(p => p.User2Id);
+            modelBuilder.Entity<MyUser>()
+                .HasMany(c => c.Dialogs)
+                .WithMany(s => s.Users)
+                .UsingEntity(j => j.ToTable("users_to_dialogs"));
+            modelBuilder.Entity<Messages>()
+                .HasOne(p => p.Dialogs)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(p=>p.DialogsId);
+            modelBuilder.Entity<Messages>()
+                .HasOne(p => p.User)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(p => p.UserId);
         }
     }
 }
