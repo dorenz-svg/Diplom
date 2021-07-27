@@ -1,8 +1,11 @@
-﻿namespace Diplom.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Diplom.Models.Entities
 {
     public class Friends
     {
         public long Id { get; set; }
+        [Required]
         public string User1Id { get; set; }
         public MyUser User1 { get; set; }
         public string User2Id { get; set; }

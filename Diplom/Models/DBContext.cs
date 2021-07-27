@@ -22,7 +22,8 @@ namespace Diplom.Models
             modelBuilder.Entity<Friends>()
                 .HasOne(p => p.User2)
                 .WithMany(t => t.Friends)
-                .HasForeignKey(p => p.User2Id);
+                .HasForeignKey(p => p.User2Id)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<MyUser>()
                 .HasMany(c => c.Dialogs)
                 .WithMany(s => s.Users)
@@ -34,7 +35,8 @@ namespace Diplom.Models
             modelBuilder.Entity<Messages>()
                 .HasOne(p => p.User)
                 .WithMany(c => c.Messages)
-                .HasForeignKey(p => p.UserId);
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade); ;
         }
     }
 }
