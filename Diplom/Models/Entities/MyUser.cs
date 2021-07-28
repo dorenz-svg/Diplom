@@ -9,6 +9,7 @@ namespace Diplom.Models.Entities
         public IEnumerable<Friends> Friends { get; set; }
         public IEnumerable<Dialogs> Dialogs { get; set; }
         public IEnumerable<Messages> Messages { get; set; }
+        public IEnumerable<MessageStatus> MessageStatuses  { get; set; }
 
     }
 }

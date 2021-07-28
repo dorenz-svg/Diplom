@@ -14,7 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-
+using System.Threading.Tasks;
 
 namespace Diplom
 {
@@ -31,8 +31,7 @@ namespace Diplom
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-
+            services.AddSignalR();
             services.AddDbContext<DBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             var builder = services.AddIdentityCore<MyUser>();
@@ -60,6 +59,23 @@ namespace Diplom
                            ValidateAudience = false,
                            ValidateIssuer = false,
                        };
+                       opt.Events = new JwtBearerEvents
+                       {
+                           OnMessageReceived = context =>
+                           {
+                               var accessToken = context.Request.Query["access_token"];
+
+                           // если запрос направлен хабу
+                           var path = context.HttpContext.Request.Path;
+                               if (!string.IsNullOrEmpty(accessToken) &&
+                                   (path.StartsWithSegments("/chat")))
+                               {
+                               // получаем токен из строки запроса
+                               context.Token = accessToken;
+                               }
+                               return Task.CompletedTask;
+                           }
+                       };
                    });
         }
 
@@ -80,6 +96,7 @@ namespace Diplom
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/chat");
                 endpoints.MapControllers();
             });
         }
