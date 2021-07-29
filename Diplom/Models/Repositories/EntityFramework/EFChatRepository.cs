@@ -16,7 +16,11 @@ namespace Diplom.Models.Repositories.EntityFramework
 
         public async Task SetMessage(string message, long id,string userId)
         {
-            context.Messages.Add(new Messages{ Id = 0, DialogsId = id, Text = message, UserId = userId ,MessageStatus= new MessageStatus { Id = 0, IsChecked = false, UserId = userId } });
+            var messageTemp = new Messages() { Id = 0, DialogsId = id, Text = message, UserId = userId ,Time=DateTime.UtcNow};
+            await context.Messages.AddAsync(messageTemp);
+            await context.SaveChangesAsync();
+            var messageStatus = new MessageStatus() { Id = 0, IsChecked = false, UserId = userId, MessagesId = messageTemp.Id };
+            await context.MessageStatuses.AddAsync(messageStatus);
             await context.SaveChangesAsync();
         }
     }

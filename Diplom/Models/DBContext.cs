@@ -12,6 +12,7 @@ namespace Diplom.Models
         public DbSet<Friends> Friends { get; set; }
         public DbSet<Dialogs> Dialogs { get; set; }
         public DbSet<Messages> Messages { get; set; }
+        public DbSet<MessageStatus> MessageStatuses { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
