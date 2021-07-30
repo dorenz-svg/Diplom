@@ -12,7 +12,7 @@ namespace Diplom.Models
         public DbSet<Friends> Friends { get; set; }
         public DbSet<Dialogs> Dialogs { get; set; }
         public DbSet<Messages> Messages { get; set; }
-        public DbSet<MessageStatus> MessageStatuses { get; set; }
+        public DbSet<MessageStatus> MessageStatus { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -24,7 +24,7 @@ namespace Diplom.Models
                 .HasOne(p => p.User2)
                 .WithMany(t => t.Friends)
                 .HasForeignKey(p => p.User2Id)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.ClientCascade);
             modelBuilder.Entity<MyUser>()
                 .HasMany(c => c.Dialogs)
                 .WithMany(s => s.Users)
@@ -37,15 +37,15 @@ namespace Diplom.Models
                 .HasOne(p => p.User)
                 .WithMany(c => c.Messages)
                 .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.Cascade); ;
-            modelBuilder.Entity<MessageStatus>()
-                .HasOne(p => p.Messages)
-                .WithOne(c => c.MessageStatus)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Messages>()
+                .HasOne(p => p.MessageStatus)
+                .WithOne(c => c.Messages)
                 .HasForeignKey<MessageStatus>(p => p.MessagesId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.ClientCascade);
             modelBuilder.Entity<MessageStatus>()
                 .HasOne(p => p.User)
-                .WithMany(c => c.MessageStatuses)
+                .WithMany(c => c.MessageStatus)
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

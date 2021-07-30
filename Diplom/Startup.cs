@@ -40,6 +40,7 @@ namespace Diplom
             identityBuilder.AddSignInManager<SignInManager<MyUser>>();
             services.AddTransient<IFriendsRepository, EFFriendsRepository>();
             services.AddTransient<IUsersRepository, EFUsersRepository>();
+            services.AddTransient<IChatRepository, EFChatRepository>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddSwaggerGen(c =>
             {

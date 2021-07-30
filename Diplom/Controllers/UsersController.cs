@@ -32,7 +32,7 @@ namespace Diplom.Controllers
         [Authorize]
         public async Task<ActionResult<UserResponse>> Put(MyUser user)
         {
-            if(user is null)
+            if (user is null)
             {
                 return BadRequest();
             }
@@ -40,21 +40,14 @@ namespace Diplom.Controllers
             {
                 return Ok(await repository.Put(user));
             }
-            
+
         }
         [HttpDelete]
         [Authorize]
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> Delete()
         {
-            if (id is null)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                await repository.Delete(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-                return Ok();
-            }
+            await repository.Delete(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            return Ok();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Diplom.Models.Entities
         [Required]
         [MaxLength(75)]
         public string Name { get; set; }
-        public IEnumerable<MyUser> Users { get; set; }
+        public List<MyUser> Users { get; set; } = new List<MyUser>();
         public IEnumerable<Messages> Messages { get; set; }
         [Required]
         public DateTime Time { get; set; }

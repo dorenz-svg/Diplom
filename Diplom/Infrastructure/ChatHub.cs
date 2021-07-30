@@ -16,12 +16,12 @@ namespace Diplom.Infrastructure
         private readonly IChatRepository repository;
         public ChatHub(IChatRepository repo) => repository = repo;
         public async Task Enter(long Id)
-        {           
-                await Groups.AddToGroupAsync(Context.ConnectionId, Id.ToString());
-        }
-        public async Task Send(string message, long id)
         {
-            await repository.SetMessage(message, id, Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            await Groups.AddToGroupAsync(Context.ConnectionId, Id.ToString());
+        }
+        public async Task Send(string message, long id, string userIdReceiver)
+        {
+            await repository.SetMessage(message, id, Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value, userIdReceiver);
             await Clients.Group(id.ToString()).SendAsync("Receive", message);
         }
     }
