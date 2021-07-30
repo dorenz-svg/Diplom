@@ -13,7 +13,7 @@ namespace Diplom.Models.Repositories.EntityFramework
         public EFUsersRepository(DBContext ctx) => context = ctx;
         public async Task Delete(string id)
         {
-            var temp = context.Users.Include(x=>x.Messages).Include(x=>x.Friends).Include(x=>x.CurrentUser).Include(x=>x.Dialogs).Include(x=>x.MessageStatus).FirstOrDefault(x=>x.Id==id);
+            var temp = context.Users.Include(x=>x.Friends).FirstOrDefault(x=>x.Id==id);
             context.Users.Remove(temp);
             await context.SaveChangesAsync();
         }
