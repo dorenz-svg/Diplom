@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Diplom.Models.Repositories.EntityFramework
 {
-    public class EFChatRepository : IChatRepository
+    public class EFDialogRepository : IDialogRepository
     {
         private readonly DBContext context;
-        public EFChatRepository(DBContext ctx) => context = ctx;
+        public EFDialogRepository(DBContext ctx) => context = ctx;
 
         public async Task<long> CreateDialog(string userId1, string userId2,string name)
         {
@@ -50,14 +50,12 @@ namespace Diplom.Models.Repositories.EntityFramework
                         where c.Id == id
                         select new UserResponse {Id=x.Id,UserName=x.UserName,Email=x.Email,Phone=x.PhoneNumber }).ToList();
             return await Task.FromResult(temp);
-        }
+        }        
 
-        public async Task SetMessage(string message, long id,string userIdSender,string userIdReceiver)
+        public async Task UpdateDialog(long id,string name)
         {
-            var messageTemp = new Messages() { Id = 0, DialogsId = id, Text = message, UserId = userIdSender, Time=DateTime.UtcNow };
-            context.Messages.Add(messageTemp);
-            await context.SaveChangesAsync();
-            context.MessageStatus.Add(new MessageStatus { Id=0,IsChecked=false, UserId= userIdReceiver, MessagesId=messageTemp.Id});
+            var temp = context.Dialogs.Find(id);
+            temp.Name = name;
             await context.SaveChangesAsync();
         }
     }

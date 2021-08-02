@@ -8,8 +8,7 @@ namespace Diplom.Models.Query
 {
     public class MessageQuery
     {
+        public long Id { get; set; }
         public string Message { get; set; }
-        public long IdDialog { get; set; }
-        public string IdReceiver { get; set; }
     }
 }

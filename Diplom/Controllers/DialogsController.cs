@@ -18,8 +18,8 @@ namespace Diplom.Controllers
     [Route("api/[controller]")]
     public class DialogsController:ControllerBase
     {
-        private readonly IChatRepository repository;
-        public DialogsController(IChatRepository repo) => repository = repo;
+        private readonly IDialogRepository repository;
+        public DialogsController(IDialogRepository repo) => repository = repo;
 
         [HttpPost("dialogs")]
         public async Task<ActionResult<long>> CreateDialog([FromBody] DialogsQuery query)

@@ -13,8 +13,8 @@ namespace Diplom.Infrastructure
     [Authorize]
     public class ChatHub : Hub
     {
-        private readonly IChatRepository repository;
-        public ChatHub(IChatRepository repo) => repository = repo;
+        private readonly IMessageRepository repository;
+        public ChatHub(IMessageRepository repo) => repository = repo;
         public async Task Enter(long Id)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, Id.ToString());
