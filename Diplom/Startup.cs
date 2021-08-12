@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,7 +31,11 @@ namespace Diplom
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft
+                .Json.ReferenceLoopHandling.Ignore)
+                .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver
+                = new DefaultContractResolver());
             services.AddSignalR();
             services.AddDbContext<DBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -41,6 +46,8 @@ namespace Diplom
             services.AddTransient<IFriendsRepository, EFFriendsRepository>();
             services.AddTransient<IUsersRepository, EFUsersRepository>();
             services.AddTransient<IDialogRepository, EFDialogRepository>();
+            services.AddTransient<IMessageRepository, EFMessageRepository>();
+            services.AddTransient<IPostsRepository, EFPostsRepository>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddSwaggerGen(c =>
             {

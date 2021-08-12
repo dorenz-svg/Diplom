@@ -16,9 +16,12 @@ namespace Diplom.Models.Repositories.EntityFramework
         private readonly DBContext context;
         public EFMessageRepository(DBContext ctx) => context = ctx;
 
-        public async Task Delete(long id)
+        public async Task Delete(long id,DateTime time)
         {
-            var temp = context.Messages.Include(x => x.MessageStatus).FirstOrDefault(x=>x.Id==id);
+            var temp = (from x in context.Dialogs.Include(x => x.Messages)
+                        from y in x.Messages
+                        where x.Id == id && y.Time == time
+                        select y).FirstOrDefault();
             context.Messages.Remove(temp);
             await context.SaveChangesAsync();
         }
@@ -33,19 +36,27 @@ namespace Diplom.Models.Repositories.EntityFramework
             return await Task.FromResult(temp);
         }
 
-        public async Task SetMessage(string message, long id, string userIdSender, string userIdReceiver)
+        public async Task SetMessage(string message, long id, string userIdSender)
         {
             var messageTemp = new Messages() { Id = 0, DialogsId = id, Text = message, UserId = userIdSender, Time = DateTime.UtcNow };
             context.Messages.Add(messageTemp);
             await context.SaveChangesAsync();
-            context.MessageStatus.Add(new MessageStatus { Id = 0, IsChecked = false, UserId = userIdReceiver, MessagesId = messageTemp.Id });
+            var users = (from x in context.Users.Include(x => x.Dialogs)
+                         from y in x.Dialogs
+                         where y.Id == id
+                         select x.Id).ToList();
+            foreach(var c in users)
+                context.MessageStatus.Add(new MessageStatus { Id = 0, IsChecked = false, UserId = c, MessagesId = messageTemp.Id });
             await context.SaveChangesAsync();
         }
 
         public async Task Update(MessageQuery request)
         {
-            var temp = context.Messages.Find(request.Id);
-            temp.Text = request.Message;
+            var message = (from x in context.Dialogs.Include(x => x.Messages)
+                           from y in x.Messages
+                           where x.Id == request.Id && y.Time == request.Time
+                           select y).FirstOrDefault();
+            message.Text = request.Message;
             await context.SaveChangesAsync();
         }
     }

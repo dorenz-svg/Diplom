@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Diplom.Models.Query
 {
-    public class MessageQuery
+    public class PostQuery
     {
-        public long Id { get; set; }
-        public string Message { get; set; }
+        public string Id { get; set; }
         public DateTime Time { get; set; }
+        public string Text { get; set; }
     }
 }

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Diplom.Models.Query
+namespace Diplom.Models.Response
 {
-    public class MessageQuery
+    public class PostsResponse
     {
-        public long Id { get; set; }
-        public string Message { get; set; }
+        public string Text { get; set; }
         public DateTime Time { get; set; }
     }
 }

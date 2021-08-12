@@ -10,6 +10,7 @@ namespace Diplom.Models.Entities
         public List<Dialogs> Dialogs { get; set; } = new List<Dialogs>();
         public IEnumerable<Messages> Messages { get; set; }
         public IEnumerable<MessageStatus> MessageStatus  { get; set; }
+        public IEnumerable<Posts> Posts { get; set; }
 
     }
 }

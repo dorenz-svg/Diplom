@@ -23,17 +23,5 @@ namespace Diplom.Controllers
         {
             return Ok(await repository.GetMessages(idDialog, count));
         }
-        [HttpPut]
-        public async Task<ActionResult> UpdateMessage(MessageQuery query)
-        {
-            await repository.Update(query);
-            return Ok ();
-        }
-        [HttpDelete]
-        public async Task<ActionResult> DeleteMessage(long id)
-        {
-            await repository.Delete(id);
-            return Ok();
-        }
     }
 }
