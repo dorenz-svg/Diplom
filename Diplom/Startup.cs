@@ -37,6 +37,7 @@ namespace Diplom
                 .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver
                 = new DefaultContractResolver());
             services.AddSignalR();
+            services.AddCors();
             services.AddDbContext<DBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             var builder = services.AddIdentityCore<MyUser>();
@@ -99,6 +100,7 @@ namespace Diplom
 
 
             app.UseRouting();
+            app.UseCors(builder => builder.WithOrigins(Configuration.GetConnectionString("Cors")).AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseAuthorization();
 
