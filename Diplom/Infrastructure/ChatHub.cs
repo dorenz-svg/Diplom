@@ -29,7 +29,7 @@ namespace Diplom.Infrastructure
         {
             var dialogs = await diaRepo.GetDialogs(id);
             foreach(var c in dialogs)
-                await Groups.AddToGroupAsync(Context.ConnectionId, c.IdDialog.ToString());
+                await Groups.AddToGroupAsync(Context.ConnectionId, c.Id.ToString());
         }
         /// <summary>
         /// отправка сообщения всем пользователям в диалоге

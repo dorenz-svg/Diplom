@@ -20,13 +20,14 @@ namespace Diplom.Controllers
     {
         private readonly IDialogRepository repository;
         public DialogsController(IDialogRepository repo) => repository = repo;
-
-        [HttpPost("dialogs")]
-        public async Task<ActionResult<long>> CreateDialog([FromBody] DialogsQuery query)
+        
+        [HttpPost("create")]
+        public async Task<ActionResult> CreateDialog([FromBody] DialogsQuery query)
         {
-            return Ok(await repository.CreateDialog(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, query.UserId, query.Name));
+            await repository.CreateDialog(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, query.UserId, query.Name);
+            return Ok();
         }
-        [HttpGet("getdialogs")]
+        [HttpGet("get")]
         public async Task<ActionResult<IEnumerable<DialogResponse>>> GetDialogs()
         {
             return Ok(await repository.GetDialogs(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));

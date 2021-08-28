@@ -8,7 +8,14 @@ namespace Diplom.Models.Response
 {
     public class DialogResponse
     {
-        public long IdDialog { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
+        public Message Message { get; set; }
+    }
+    public class Message
+    {
+        public string Text { get; set; }
+        public DateTime Time { get; set; }
+        public string UserName { get; set; }
     }
 }

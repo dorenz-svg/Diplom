@@ -35,7 +35,7 @@ namespace Diplom.Controllers
             var user = await _userManager.FindByEmailAsync(query.Email);
             if (user == null)
             {
-                return Unauthorized();
+                return Unauthorized(new { message = "Пользователь не найден" });
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, query.Password, false);
@@ -57,12 +57,12 @@ namespace Diplom.Controllers
         {
             if (await _context.Users.Where(x => x.Email == query.Email).AnyAsync())
             {
-                return BadRequest("Email already exist");
+                return BadRequest(new {message= "Email already exist" });
             }
 
             if (await _context.Users.Where(x => x.UserName == query.UserName).AnyAsync())
             {
-                return BadRequest("UserName already exist");
+                return BadRequest(new { message = "UserName already exist" });
             }
 
             var user = new MyUser
@@ -82,7 +82,7 @@ namespace Diplom.Controllers
                 };
             }
 
-            return BadRequest("Client creation failed");
+            return BadRequest(new { message = "Client creation failed" });
         }
     }
 }
