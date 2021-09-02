@@ -40,9 +40,9 @@ namespace Diplom.Models
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Messages>()
-                .HasOne(p => p.MessageStatus)
+                .HasMany(p => p.MessageStatus)
                 .WithOne(c => c.Messages)
-                .HasForeignKey<MessageStatus>(p => p.MessagesId)
+                .HasForeignKey(p => p.MessagesId)
                 .OnDelete(DeleteBehavior.ClientCascade);
             modelBuilder.Entity<MessageStatus>()
                 .HasOne(p => p.User)

@@ -14,5 +14,6 @@ namespace Diplom.Models.Repositories.Abstract
         public Task<IEnumerable<MessageResponse>> GetMessages(long idDialog, int count);
         public Task Update(MessageQuery request);
         public Task Delete(long id, DateTime time);
+        public Task CheckMessages(string idUser,long idDialog);
     }
 }

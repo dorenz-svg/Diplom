@@ -66,5 +66,10 @@ namespace Diplom.Infrastructure
             await mesRepo.Delete(id,time);
             await Clients.Group(id.ToString()).SendAsync("Delete",new {id, time});
         }
+        public async Task CheckMessagees(long idDialog)
+        {
+            await mesRepo.CheckMessages(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value, idDialog);
+            await Clients.Group(idDialog.ToString()).SendAsync("Check");
+        }
     }
 }

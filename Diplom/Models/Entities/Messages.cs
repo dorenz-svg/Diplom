@@ -18,7 +18,7 @@ namespace Diplom.Models.Entities
         [Required]
         [MaxLength(300)]
         public string Text { get; set; }
-        public MessageStatus MessageStatus { get; set; }
+        public List<MessageStatus> MessageStatus { get; set; }
         [Required]
         public DateTime Time { get; set; }
     }

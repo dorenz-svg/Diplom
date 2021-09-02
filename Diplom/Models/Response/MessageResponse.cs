@@ -12,5 +12,6 @@ namespace Diplom.Models.Response
         public string Text { get; set; }
         public DateTime Time { get; set; }
         public string UserName { get; set; }
+        public bool IsChecked { get; set; }
     }
 }

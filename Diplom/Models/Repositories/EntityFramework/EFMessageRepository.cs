@@ -16,6 +16,17 @@ namespace Diplom.Models.Repositories.EntityFramework
         private readonly DBContext context;
         public EFMessageRepository(DBContext ctx) => context = ctx;
 
+        public async Task CheckMessages(string idUser, long idDialog)
+        {
+            var temp = context.MessageStatus
+                .Include(x => x.Messages)
+                .ThenInclude(x => x.Dialogs)
+                .Where(x => !x.IsChecked && x.UserId == idUser && x.Messages.DialogsId == idDialog).ToList();
+            foreach (var c in temp)
+                c.IsChecked = true;
+            await context.SaveChangesAsync();
+        }
+
         public async Task Delete(long id,DateTime time)
         {
             var temp = (from x in context.Dialogs.Include(x => x.Messages)
@@ -28,11 +39,13 @@ namespace Diplom.Models.Repositories.EntityFramework
 
         public async Task<IEnumerable<MessageResponse>> GetMessages(long idDialog, int count)
         {
-            var temp = context.Messages.Include(x=>x.User)
-                .Where(x => x.DialogsId == idDialog)
-                .Skip(count*16)
-                .Take(16)
-                .Select(x=>new MessageResponse { Id=x.Id,Text=x.Text,Time=x.Time,UserName=x.User.UserName});
+            var temp = (from messages in context.Messages.Where(x => x.DialogsId == idDialog).Include(x => x.User).Skip(count * 16).Take(16)
+                         from status in messages.MessageStatus.Where(x => x.MessagesId == messages.Id)
+                         select new MessageResponse { Id = messages.Id,
+                             Text = messages.Text,
+                             Time = messages.Time,
+                             UserName = messages.User.UserName,
+                             IsChecked=status.IsChecked }).ToList();                      
             return await Task.FromResult(temp);
         }
 
@@ -40,13 +53,12 @@ namespace Diplom.Models.Repositories.EntityFramework
         {
             var messageTemp = new Messages() { Id = 0, DialogsId = id, Text = message, UserId = userIdSender, Time = DateTime.UtcNow };
             context.Messages.Add(messageTemp);
-            await context.SaveChangesAsync();
             var users = (from x in context.Users.Include(x => x.Dialogs)
                          from y in x.Dialogs
                          where y.Id == id
                          select x.Id).ToList();
             foreach(var c in users)
-                context.MessageStatus.Add(new MessageStatus { Id = 0, IsChecked = false, UserId = c, MessagesId = messageTemp.Id });
+                messageTemp.MessageStatus.Add(new MessageStatus { Id = 0, IsChecked = false, UserId = c, MessagesId = messageTemp.Id });
             await context.SaveChangesAsync();
         }
 
