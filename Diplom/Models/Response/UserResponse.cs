@@ -12,5 +12,11 @@ namespace Diplom.Models.Response
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public List<UserPosts> UserPosts { get; set; }
+    }
+    public class UserPosts {
+        public long Id { get; set; }
+        public string Text { get; set; }
+        public DateTime Time { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using Diplom.Models.Entities;
 using Diplom.Models.Repositories.Abstract;
 using Diplom.Models.Response;
 using Microsoft.EntityFrameworkCore;
-
+using System.Collections.Generic;
 namespace Diplom.Models.Repositories.EntityFramework
 {
     public class EFUsersRepository : IUsersRepository
@@ -20,8 +20,15 @@ namespace Diplom.Models.Repositories.EntityFramework
 
         public async Task<UserResponse> Get(string id)
         {
-            var user=  context.Users.Find(id);
-            return await Task.FromResult(new UserResponse { Id=user.Id,UserName=user.UserName });
+            var temp = (from user in context.Users.Include(x => x.Posts)
+                        where user.Id == id
+                        select new UserResponse { Id = user.Id,
+                            UserName = user.UserName,
+                            UserPosts= user.Posts.Select(x=>new UserPosts { Id=x.Id,
+                                                                            Text=x.Text,
+                                                                            Time=x.Time}).Take(20).ToList()}
+                        ).FirstOrDefault();
+            return await Task.FromResult(temp);
         }
 
         public async Task<UserResponse> Put(MyUser user)

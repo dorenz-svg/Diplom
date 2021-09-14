@@ -41,7 +41,7 @@ namespace Diplom.Models.Repositories.EntityFramework
                                          where y.DialogsId==x.Id
                                          select y).Take(1)
                         where user.Id == id
-                        select new DialogResponse{Id=x.Id,Name=x.Name, Message= new Message { Text=message.Text,Time=message.Time,UserName=user.UserName} }).ToList();
+                        select new DialogResponse{Id=x.Id,Name=x.Name, Message= new Message {Id=message.Id, Text=message.Text,Time=message.Time,UserName=user.UserName} }).ToList();
             return await Task.FromResult(temp);
         }
 

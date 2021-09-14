@@ -44,6 +44,7 @@ namespace Diplom.Controllers
             {
                 return new
                 {
+                    id=user.Id,
                     UserName = user.UserName,
                     Token = _jwtGenerator.CreateToken(user)
                 };
@@ -77,6 +78,7 @@ namespace Diplom.Controllers
             {
                 return new
                 {
+                    id = user.Id,
                     Token = _jwtGenerator.CreateToken(user),
                     UserName = user.UserName,
                 };

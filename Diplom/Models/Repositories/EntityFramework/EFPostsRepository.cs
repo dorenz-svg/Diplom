@@ -29,7 +29,7 @@ namespace Diplom.Models.Repositories.EntityFramework
 
         public async Task<IEnumerable<PostsResponse>> Get(string id)
         {
-            return await Task.FromResult(context.Posts.Where(x => x.UserId == id).Select(x=> new PostsResponse { Text=x.Text,Time=x.Time }));
+            return await Task.FromResult(context.Posts.Where(x => x.UserId == id).Select(x=> new PostsResponse { Id=x.Id,Text=x.Text,Time=x.Time }));
         }
 
         public async Task Update(PostQuery query)
