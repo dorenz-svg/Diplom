@@ -21,11 +21,11 @@ namespace Diplom.Controllers
         {
             if (id is null)
             {
-                return BadRequest();
+                return Ok(await repository.Get(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
             }
             else
             {
-                return Ok(await repository.Get(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+                return Ok(await repository.Get(id));
             }
         }
         [HttpPut]
