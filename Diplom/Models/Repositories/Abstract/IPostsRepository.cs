@@ -12,7 +12,7 @@ namespace Diplom.Models.Repositories.Abstract
     {
         public Task Create(PostQuery query);
         public Task Update(PostQuery query);
-        public Task<IEnumerable<PostsResponse>> Get(string id);
-        public Task Delete(PostQuery query);
+        public Task<IEnumerable<PostsResponse>> Get(string id,int count);
+        public Task Delete(long id);
     }
 }

@@ -20,16 +20,16 @@ namespace Diplom.Models.Repositories.EntityFramework
             await context.SaveChangesAsync();
         }
 
-        public async Task Delete(PostQuery query)
+        public async Task Delete(long id)
         {
-            var temp= context.Posts.FirstOrDefault(x => x.UserId == query.Id && x.Time == query.Time);
+            var temp= context.Posts.Find(id);
             context.Posts.Remove(temp);
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<PostsResponse>> Get(string id)
+        public async Task<IEnumerable<PostsResponse>> Get(string id,int count)
         {
-            return await Task.FromResult(context.Posts.Where(x => x.UserId == id).Select(x=> new PostsResponse { Id=x.Id,Text=x.Text,Time=x.Time }));
+            return await Task.FromResult(context.Posts.Where(x => x.UserId == id).Skip(20*count).Take(20).Select(x=> new PostsResponse { Id=x.Id,Text=x.Text,Time=x.Time }));
         }
 
         public async Task Update(PostQuery query)

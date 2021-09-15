@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,9 +20,12 @@ namespace Diplom.Controllers
         public readonly IPostsRepository repository;
         public PostsRepository(IPostsRepository repo) => repository = repo;
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PostsResponse>>> Get(string id)
+        public async Task<ActionResult<IEnumerable<PostsResponse>>> Get(string id,int count=1)
         {
-            return Ok(await repository.Get(id));
+            if (id is null)
+                return Ok(await repository.Get(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, count));
+            else
+                return Ok(await repository.Get(id,count));
         }
         [HttpPost]
         public async Task<ActionResult> Create(PostQuery query)
@@ -30,9 +34,9 @@ namespace Diplom.Controllers
             return Ok();
         }
         [HttpDelete]
-        public async Task<ActionResult> Delete(PostQuery query)
+        public async Task<ActionResult> Delete(long id)
         {
-            await repository.Delete(query);
+            await repository.Delete(id);
             return Ok();
         }
         [HttpPut]
