@@ -12,4 +12,8 @@ namespace Diplom.Models.Query
         public DateTime Time { get; set; }
         public string Text { get; set; }
     }
+    public class PostWithPhotoQuery : PostQuery
+    {
+        public List<string> PhotosPath { get; set; }
+    }
 }

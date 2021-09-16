@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Diplom.Models.Entities
 {
     public class Posts
@@ -8,5 +10,6 @@ namespace Diplom.Models.Entities
         public string Text { get; set; }
         public string UserId { get; set; }
         public MyUser User { get; set; }
+        public List<Photos> Photos { get; set; }
     }
 }

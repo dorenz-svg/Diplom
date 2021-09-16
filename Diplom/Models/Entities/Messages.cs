@@ -21,5 +21,6 @@ namespace Diplom.Models.Entities
         public List<MessageStatus> MessageStatus { get; set; }
         [Required]
         public DateTime Time { get; set; }
+        public List<Photos> Photos { get; set; }
     }
 }

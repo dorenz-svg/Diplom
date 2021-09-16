@@ -11,5 +11,6 @@ namespace Diplom.Models.Response
         public long Id { get; set; }
         public string Text { get; set; }
         public DateTime Time { get; set; }
+        public IEnumerable<string> Path { get; set; }
     }
 }

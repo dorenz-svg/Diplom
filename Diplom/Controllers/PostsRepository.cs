@@ -30,7 +30,8 @@ namespace Diplom.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(PostQuery query)
         {
-            await repository.Create(query);
+            PostWithPhotoQuery temp = new PostWithPhotoQuery() {Id=query.Id,PhotosPath=new List<string> {},Text=query.Text,Time=query.Time };
+            await repository.Create(temp);
             return Ok();
         }
         [HttpDelete]
@@ -42,7 +43,8 @@ namespace Diplom.Controllers
         [HttpPut]
         public async Task<ActionResult> Update(PostQuery query)
         {
-            await repository.Update(query);
+            PostWithPhotoQuery temp = new PostWithPhotoQuery() { Id = query.Id, PhotosPath = new List<string> { }, Text = query.Text, Time = query.Time };
+            await repository.Update(temp);
             return Ok();
         }
     }
