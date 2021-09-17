@@ -32,7 +32,7 @@ namespace Diplom.Models.Repositories.EntityFramework
             context.Posts.Remove(temp);
             await context.SaveChangesAsync();
         }
-
+        //нужно будет добавить путь ресурса к фото
         public async Task<IEnumerable<PostsResponse>> Get(string id, int count)
         {
             return await Task.FromResult(context.Posts.Include(x => x.Photos)
@@ -46,8 +46,8 @@ namespace Diplom.Models.Repositories.EntityFramework
         {
             var temp = context.Posts.Include(x => x.Photos).FirstOrDefault(x => x.UserId == query.Id && x.Time == query.Time);
             temp.Text = query.Text;
-            var pathes = temp.Photos.Select(x => x.Path);
-            var deletePhotosPath = temp.Photos.Select(x => x.Path).Except(query.PhotosPath);
+            var pathes = temp.Photos.Select(x => x.Path).ToList();
+            var deletePhotosPath = temp.Photos.Select(x => x.Path).Except(query.PhotosPath).ToList();
             var deletePhotos = (from x in temp.Photos
                                from y in deletePhotosPath
                                where x.Path == y
@@ -58,7 +58,8 @@ namespace Diplom.Models.Repositories.EntityFramework
             {
                 if (!pathes.Contains(c))
                 {
-                    temp.Photos.Add(new Photos { Id = 0, Path = c, Time = query.Time });
+                    var photo = new Photos { Id = 0, Path = c, Time = query.Time,PostId=temp.Id };
+                    context.Photos.Add(photo);
                 }
             }
             await context.SaveChangesAsync();

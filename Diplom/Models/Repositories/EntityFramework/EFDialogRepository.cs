@@ -35,13 +35,13 @@ namespace Diplom.Models.Repositories.EntityFramework
 
         public async Task<IEnumerable<DialogResponse>> GetDialogs(string id)
         {
-            var temp = (from x in context.Dialogs.Include(x => x.Users)
+            var temp = (from x in context.Dialogs.Include(x => x.Users).Include(x=>x.Messages)
                         from user in x.Users
-                        from message in (from y in context.Messages.Include(x=>x.Dialogs)
-                                         where y.DialogsId==x.Id
-                                         select y).Take(1)
                         where user.Id == id
-                        select new DialogResponse{Id=x.Id,Name=x.Name, Message= new Message {Id=message.Id, Text=message.Text,Time=message.Time,UserName=user.UserName} }).ToList();
+                        select new DialogResponse{Id=x.Id,Name=x.Name,
+                            Message= x.Messages.Select(c=> 
+                            new Message { Id = c.Id, Text = c.Text, Time = c.Time, UserName = user.UserName })
+                            .FirstOrDefault()}).ToList();
             return await Task.FromResult(temp);
         }
 

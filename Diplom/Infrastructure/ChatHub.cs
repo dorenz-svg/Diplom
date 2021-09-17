@@ -32,18 +32,6 @@ namespace Diplom.Infrastructure
                 await Groups.AddToGroupAsync(Context.ConnectionId, c.Id.ToString());
         }
         /// <summary>
-        /// отправка сообщения всем пользователям в диалоге
-        /// </summary>
-        /// <param name="message">отправляемое сообщение</param>
-        /// <param name="id">id диалога</param>
-        /// <param name="userIdReceiver"></param>
-        /// <returns></returns>
-        public async Task Send(string message, long id)
-        {
-            await mesRepo.SetMessage(message, id, Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            await Clients.Group(id.ToString()).SendAsync("Receive",new { message,id});
-        }
-        /// <summary>
         /// изменить сообщение и отправить всем пользователям в диалоге изменения
         /// </summary>
         /// <param name="id">id диалога</param>
@@ -52,19 +40,19 @@ namespace Diplom.Infrastructure
         /// <returns></returns>
         public async Task Update(long id,DateTime time, string message)
         {
-            await mesRepo.Update(new MessageQuery { Id=id,Time=time,Message=message});
+            await mesRepo.Update(new MessageWithPhoto { IdDialog=id,Time=time,Message=message});
             await Clients.Group(id.ToString()).SendAsync("Update",new { message,id });
         }
         /// <summary>
         /// удалить сообщение и отправить всем пользователям диалога изменения
         /// </summary>
-        /// <param name="id">id диалога</param>
+        /// <param name="idDialog">id диалога</param>
         /// <param name="time">время создания сообщения</param>
         /// <returns></returns>
-        public async Task Delete(long id,DateTime time)
+        public async Task Delete(long idDialog,long idMessage)
         {
-            await mesRepo.Delete(id,time);
-            await Clients.Group(id.ToString()).SendAsync("Delete",new {id, time});
+            await mesRepo.Delete(idDialog);
+            await Clients.Group(idDialog.ToString()).SendAsync("Delete",new {idDialog, idMessage});
         }
         public async Task CheckMessagees(long idDialog)
         {

@@ -23,5 +23,19 @@ namespace Diplom.Controllers
         {
             return Ok(await repository.GetMessages(idDialog, count));
         }
+        [HttpPost]
+        public async Task<ActionResult> CreateMessage(MessageQuery query)
+        {
+            MessageWithPhoto message = new MessageWithPhoto { IdDialog = query.IdDialog, Message = query.Message,IdSender=query.IdSender, Time = query.Time, PhotosPath = new List<string>() };
+            await repository.SetMessage(message);
+            return Ok();
+        }
+        [HttpPut]
+        public async Task<ActionResult> UpdateMessage(MessageQuery query)
+        {
+            MessageWithPhoto message = new MessageWithPhoto { IdDialog = query.IdDialog, Message = query.Message, IdSender = query.IdSender, Time = query.Time, PhotosPath = new List<string>() };
+            await repository.Update(message);
+            return Ok();
+        }
     }
 }

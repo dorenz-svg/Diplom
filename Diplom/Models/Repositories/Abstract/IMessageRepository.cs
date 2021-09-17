@@ -10,10 +10,10 @@ namespace Diplom.Models.Repositories.Abstract
 {
     public interface IMessageRepository
     {
-        public Task SetMessage(string message, long id, string userIdSender);
+        public Task SetMessage(MessageWithPhoto message);
         public Task<IEnumerable<MessageResponse>> GetMessages(long idDialog, int count);
-        public Task Update(MessageQuery request);
-        public Task Delete(long id, DateTime time);
+        public Task Update(MessageWithPhoto request);
+        public Task Delete(long id);
         public Task CheckMessages(string idUser,long idDialog);
     }
 }
