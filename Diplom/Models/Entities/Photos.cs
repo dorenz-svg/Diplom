@@ -11,9 +11,9 @@ namespace Diplom.Models.Entities
         public long Id { get; set; }
         public string Path { get; set; }
         public DateTime Time { get; set; }
-        public long MessageId { get; set; }
+        public long? MessageId { get; set; }
         public Messages Message { get; set; }
-        public long PostId { get; set; }
+        public long? PostId { get; set; }
         public Posts Post { get; set; }
     }
 }

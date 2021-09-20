@@ -15,6 +15,7 @@ namespace Diplom.Models
         public DbSet<MessageStatus> MessageStatus { get; set; }
         public DbSet<Posts> Posts { get; set; }
         public DbSet<Photos> Photos { get; set; }
+        public DbSet<Likes> Likes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -65,6 +66,12 @@ namespace Diplom.Models
                 .WithOne(c => c.Message)
                 .HasForeignKey(p => p.MessageId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Posts>()
+                .HasMany(x => x.Likes)
+                .WithOne(c => c.Posts)
+                .HasForeignKey(p=>p.PostId)
+                .OnDelete(DeleteBehavior.ClientCascade);
+            modelBuilder.Entity<Likes>().HasKey(x => new { x.PostId, x.UserId });
         }
     }
 }

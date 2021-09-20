@@ -10,6 +10,7 @@ namespace Diplom.Models.Entities
         public string Text { get; set; }
         public string UserId { get; set; }
         public MyUser User { get; set; }
+        public List<Likes> Likes { get; set; }
         public List<Photos> Photos { get; set; }
     }
 }

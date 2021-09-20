@@ -10,9 +10,10 @@ namespace Diplom.Models.Repositories.Abstract
 {
     public interface IPostsRepository
     {
-        public Task Create(PostWithPhotoQuery query);
-        public Task Update(PostWithPhotoQuery query);
+        public Task Create(PostQuery query);
+        public Task Update(PostQuery query);
         public Task<IEnumerable<PostsResponse>> Get(string id,int count);
         public Task Delete(long id);
+        public Task Like(long idPost,string idUser,bool like);
     }
 }

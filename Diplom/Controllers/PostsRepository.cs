@@ -1,4 +1,5 @@
-﻿using Diplom.Models.Query;
+﻿using Diplom.Infrastructure;
+using Diplom.Models.Query;
 using Diplom.Models.Repositories.Abstract;
 using Diplom.Models.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -17,8 +18,13 @@ namespace Diplom.Controllers
     [Route("api/[controller]")]
     public class PostsRepository:ControllerBase
     {
-        public readonly IPostsRepository repository;
-        public PostsRepository(IPostsRepository repo) => repository = repo;
+        private readonly IPostsRepository repository;
+        private readonly ISaveImage image;
+        public PostsRepository(IPostsRepository repo,ISaveImage img)
+        {
+            repository = repo;
+            image = img;
+        }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostsResponse>>> Get(string id,int count=1)
         {
@@ -30,8 +36,11 @@ namespace Diplom.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(PostQuery query)
         {
-            PostWithPhotoQuery temp = new PostWithPhotoQuery() {Id=query.Id,PhotosPath=new List<string> {},Text=query.Text,Time=query.Time };
-            await repository.Create(temp);
+            if (query.Text is null && query.File is null)
+                return BadRequest();
+            if(query.File !=null)
+                query.PhotosPath = await image.Save(query.File);
+            await repository.Create(query);
             return Ok();
         }
         [HttpDelete]
@@ -43,8 +52,14 @@ namespace Diplom.Controllers
         [HttpPut]
         public async Task<ActionResult> Update(PostQuery query)
         {
-            PostWithPhotoQuery temp = new PostWithPhotoQuery() { Id = query.Id, PhotosPath = new List<string> { }, Text = query.Text, Time = query.Time };
-            await repository.Update(temp);
+            query.PhotosPath = await image.Save(query.File);
+            await repository.Update(query);
+            return Ok();
+        }
+        [HttpPost("like")]
+        public async Task<ActionResult> Like(long idPost, bool like)
+        {
+            await repository.Like(idPost, User.FindFirst(ClaimTypes.NameIdentifier)?.Value, like);
             return Ok();
         }
     }

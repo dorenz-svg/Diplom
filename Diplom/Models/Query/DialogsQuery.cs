@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,9 @@ namespace Diplom.Models.Query
 {
     public class DialogsQuery
     {
+        [BindRequired]
         public string UserId { get; set; }
+        [BindRequired]
         public string Name { get; set; }
     }
 }

@@ -50,6 +50,7 @@ namespace Diplom
             services.AddTransient<IMessageRepository, EFMessageRepository>();
             services.AddTransient<IPostsRepository, EFPostsRepository>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
+            services.AddScoped<ISaveImage, SaveImage>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Diplom", Version = "v1" });
@@ -97,8 +98,7 @@ namespace Diplom
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Diplom v1"));
             }
-
-
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseCors(builder => builder.WithOrigins(Configuration.GetConnectionString("Cors")).AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();

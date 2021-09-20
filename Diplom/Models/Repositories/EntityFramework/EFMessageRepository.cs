@@ -3,6 +3,7 @@ using Diplom.Models.Query;
 using Diplom.Models.Repositories.Abstract;
 using Diplom.Models.Response;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,12 @@ namespace Diplom.Models.Repositories.EntityFramework
     public class EFMessageRepository:IMessageRepository
     {
         private readonly DBContext context;
-        public EFMessageRepository(DBContext ctx) => context = ctx;
+        private readonly IConfiguration configuration;
+        public EFMessageRepository(DBContext ctx,IConfiguration config ) 
+        {
+            context = ctx;
+            configuration = config;
+        }
 
         public async Task CheckMessages(string idUser, long idDialog)
         {
@@ -32,7 +38,6 @@ namespace Diplom.Models.Repositories.EntityFramework
             context.Messages.Remove(temp);
             await context.SaveChangesAsync();
         }
-        //нужно будет добавить путь ресурса к фото
         public async Task<IEnumerable<MessageResponse>> GetMessages(long idDialog, int count)
         {
             var message = context.Messages.Where(x => x.DialogsId == idDialog)
@@ -48,12 +53,12 @@ namespace Diplom.Models.Repositories.EntityFramework
                     IsChecked = context.MessageStatus.Include(c => c.User)
                     .Where(c => c.MessagesId == x.Id && c.UserId == x.UserId)
                     .Select(c => c.IsChecked).FirstOrDefault(),
-                    Path= x.Photos.Select(x=>x.Path)
+                    Path= x.Photos.Select(x=>configuration.GetConnectionString("ApplicationUrl") +x.Path)
                 });
             return await Task.FromResult(message);
         }
 
-        public async Task SetMessage(MessageWithPhoto message)
+        public async Task SetMessage(MessageQuery message)
         {
             var messageTemp = new Messages() { Id = 0, DialogsId = message.IdDialog, Text = message.Message, UserId = message.IdSender, Time = DateTime.UtcNow };
             context.Messages.Add(messageTemp);
@@ -78,8 +83,7 @@ namespace Diplom.Models.Repositories.EntityFramework
             }
             await context.SaveChangesAsync();
         }
-
-        public async Task Update(MessageWithPhoto request)
+        public async Task Update(MessageQuery request)
         {
             var message = (from x in context.Dialogs.Include(x => x.Messages).ThenInclude(x=>x.Photos)
                            from y in x.Messages

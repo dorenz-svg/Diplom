@@ -40,7 +40,7 @@ namespace Diplom.Infrastructure
         /// <returns></returns>
         public async Task Update(long id,DateTime time, string message)
         {
-            await mesRepo.Update(new MessageWithPhoto { IdDialog=id,Time=time,Message=message});
+            await mesRepo.Update(new MessageQuery { IdDialog=id,Time=time,Message=message});
             await Clients.Group(id.ToString()).SendAsync("Update",new { message,id });
         }
         /// <summary>

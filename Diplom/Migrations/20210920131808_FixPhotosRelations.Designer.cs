@@ -4,14 +4,16 @@ using Diplom.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Diplom.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20210920131808_FixPhotosRelations")]
+    partial class FixPhotosRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,21 +77,6 @@ namespace Diplom.Migrations
                     b.HasIndex("User2Id");
 
                     b.ToTable("Friends");
-                });
-
-            modelBuilder.Entity("Diplom.Models.Entities.Likes", b =>
-                {
-                    b.Property<long>("PostId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("PostId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("Diplom.Models.Entities.MessageStatus", b =>
@@ -428,25 +415,6 @@ namespace Diplom.Migrations
                     b.Navigation("User2");
                 });
 
-            modelBuilder.Entity("Diplom.Models.Entities.Likes", b =>
-                {
-                    b.HasOne("Diplom.Models.Entities.Posts", "Posts")
-                        .WithMany("Likes")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.HasOne("Diplom.Models.Entities.MyUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Posts");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Diplom.Models.Entities.MessageStatus", b =>
                 {
                     b.HasOne("Diplom.Models.Entities.Messages", "Messages")
@@ -589,8 +557,6 @@ namespace Diplom.Migrations
 
             modelBuilder.Entity("Diplom.Models.Entities.Posts", b =>
                 {
-                    b.Navigation("Likes");
-
                     b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
