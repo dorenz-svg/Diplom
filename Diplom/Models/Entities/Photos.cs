@@ -15,5 +15,7 @@ namespace Diplom.Models.Entities
         public Messages Message { get; set; }
         public long? PostId { get; set; }
         public Posts Post { get; set; }
+        public string UserId { get; set; }
+        public MyUser User { get; set; }
     }
 }

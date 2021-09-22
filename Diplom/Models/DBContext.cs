@@ -72,6 +72,11 @@ namespace Diplom.Models
                 .HasForeignKey(p=>p.PostId)
                 .OnDelete(DeleteBehavior.ClientCascade);
             modelBuilder.Entity<Likes>().HasKey(x => new { x.PostId, x.UserId });
+            modelBuilder.Entity<MyUser>()
+                .HasOne(x => x.Photos)
+                .WithOne(c => c.User)
+                .HasForeignKey<Photos>(p => p.UserId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

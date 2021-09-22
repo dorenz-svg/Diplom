@@ -11,6 +11,6 @@ namespace Diplom.Models.Entities
         public IEnumerable<Messages> Messages { get; set; }
         public IEnumerable<MessageStatus> MessageStatus  { get; set; }
         public IEnumerable<Posts> Posts { get; set; }
-
+        public Photos Photos { get; set; }
     }
 }

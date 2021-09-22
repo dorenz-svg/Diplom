@@ -5,12 +5,31 @@ using Diplom.Models.Repositories.Abstract;
 using Diplom.Models.Response;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System;
+using Microsoft.Extensions.Configuration;
+
 namespace Diplom.Models.Repositories.EntityFramework
 {
     public class EFUsersRepository : IUsersRepository
     {
         private readonly DBContext context;
-        public EFUsersRepository(DBContext ctx) => context = ctx;
+        private readonly IConfiguration configuration;
+        public EFUsersRepository(DBContext ctx,IConfiguration config)
+        { 
+            context = ctx;
+            configuration = config;
+        }
+
+        public async Task<object> AddUserPhoto(string id, string PathPhoto)
+        {
+            var user = context.Users.Include(x => x.Photos).FirstOrDefault(x => x.Id == id);
+            var temp = new Photos { Id = 0, Time = DateTime.UtcNow, Path = PathPhoto };
+            context.Photos.Add(temp);
+            user.Photos = temp;
+            await context.SaveChangesAsync();
+            return new { Path = configuration.GetConnectionString("ApplicationUrl") + PathPhoto };
+        }
+
         public async Task Delete(string id)
         {
             var temp = context.Users.Include(x=>x.Friends).FirstOrDefault(x=>x.Id==id);

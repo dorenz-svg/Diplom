@@ -12,6 +12,7 @@ namespace Diplom.Models.Response
         public string Text { get; set; }
         public DateTime Time { get; set; }
         public long Likes { get; set; }
+        public bool IsLike { get; set; }
         public IEnumerable<string> Path { get; set; }
     }
 }

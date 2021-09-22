@@ -1,8 +1,12 @@
-﻿using Diplom.Models.Entities;
+﻿using Diplom.Infrastructure;
+using Diplom.Models.Entities;
 using Diplom.Models.Repositories.Abstract;
 using Diplom.Models.Response;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -14,7 +18,12 @@ namespace Diplom.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersRepository repository;
-        public UsersController(IUsersRepository repo) => repository = repo;
+        private readonly ISaveImage image;
+        public UsersController(IUsersRepository repo,ISaveImage img) 
+        { 
+            repository = repo;
+            image = img;
+        }
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<UserResponse>> Get(string id)
@@ -48,6 +57,13 @@ namespace Diplom.Controllers
         {
             await repository.Delete(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             return Ok();
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<object>> UpdateUserPhoto(IFormFile file)
+        {
+            var temp=await image.Save(file as IFormFileCollection);
+            return Ok(await repository.AddUserPhoto(User.FindFirst(ClaimTypes.NameIdentifier)?.Value,temp.FirstOrDefault()));
         }
     }
 }
