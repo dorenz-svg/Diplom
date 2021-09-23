@@ -39,12 +39,14 @@ namespace Diplom.Models.Repositories.EntityFramework
 
         public async Task<UserResponse> Get(string id)
         {
-            var temp = (from user in context.Users.Include(x => x.Posts)
+            var temp = (from user in context.Users.Include(x => x.Posts).Include(x=>x.Photos)
                         where user.Id == id
                         select new UserResponse { Id = user.Id,
                             UserName = user.UserName,
+                            ProfilePhoto= configuration.GetConnectionString("ApplicationUrl")+user.Photos.Path,
                             UserPosts= user.Posts.Select(x=>new UserPosts { Id=x.Id,
                                                                             Text=x.Text,
+                                                                            PhotosUrl=x.Photos.Select(c=>c.Path).ToList(),
                                                                             Time=x.Time}).Take(20).ToList()}
                         ).FirstOrDefault();
             return await Task.FromResult(temp);

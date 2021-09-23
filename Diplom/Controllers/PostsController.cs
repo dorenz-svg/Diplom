@@ -16,11 +16,11 @@ namespace Diplom.Controllers
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
-    public class PostsRepository:ControllerBase
+    public class PostsController:ControllerBase
     {
         private readonly IPostsRepository repository;
         private readonly ISaveImage image;
-        public PostsRepository(IPostsRepository repo,ISaveImage img)
+        public PostsController(IPostsRepository repo,ISaveImage img)
         {
             repository = repo;
             image = img;
