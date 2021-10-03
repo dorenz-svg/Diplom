@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System;
 using Microsoft.Extensions.Configuration;
+using Diplom.Models.Query;
 
 namespace Diplom.Models.Repositories.EntityFramework
 {
@@ -43,7 +44,7 @@ namespace Diplom.Models.Repositories.EntityFramework
                         where user.Id == id
                         select new UserResponse { Id = user.Id,
                             UserName = user.UserName,
-                            ProfilePhoto= configuration.GetConnectionString("ApplicationUrl")+user.Photos.Path,
+                            ProfilePhoto= user.Photos.Path != null? configuration.GetConnectionString("ApplicationUrl") + user.Photos.Path:null,
                             UserPosts= user.Posts.Select(x=>new UserPosts { Id=x.Id,
                                                                             Text=x.Text,
                                                                             PhotosUrl=x.Photos.Select(c=>c.Path).ToList(),
@@ -52,10 +53,11 @@ namespace Diplom.Models.Repositories.EntityFramework
             return await Task.FromResult(temp);
         }
 
-        public async Task<UserResponse> Put(MyUser user)
+        public async Task<UserResponse> Put(UserQuery user)
         {
             var currentUser =  context.Users.Find(user.Id);
             currentUser.UserName = user.UserName;
+            currentUser.PhoneNumber = user.Phone;
             await context.SaveChangesAsync();
             return new UserResponse { Id=currentUser.Id,UserName=currentUser.UserName};
         }

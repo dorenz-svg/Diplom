@@ -44,7 +44,12 @@ namespace Diplom.Models.Repositories.EntityFramework
                 .Where(x => x.UserId == id)
                 .Skip(20 * count)
                 .Take(20)
-                .Select(x => new PostsResponse { Id = x.Id, Text = x.Text, Time = x.Time,IsLike= context.Likes.Any(c=>c.PostId==x.Id && c.UserId==id), Likes = context.Likes.Count(c => c.PostId == x.Id), PhotosUrl = x.Photos.Select(c => configuration.GetConnectionString("ApplicationUrl") + c.Path) }));
+                .Select(x => new PostsResponse { Id = x.Id,
+                                                 Text = x.Text,
+                                                 Time = x.Time,
+                                                 IsLike= context.Likes.Any(c=>c.PostId==x.Id && c.UserId==id),
+                                                 Likes = context.Likes.Count(c => c.PostId == x.Id),
+                                                                                  PhotosUrl = x.Photos.Select(c => configuration.GetConnectionString("ApplicationUrl") + c.Path) }));
         }
 
         public async Task Like(long idPost, string idUser, bool like)

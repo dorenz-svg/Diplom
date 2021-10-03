@@ -1,5 +1,6 @@
 ﻿using Diplom.Infrastructure;
 using Diplom.Models.Entities;
+using Diplom.Models.Query;
 using Diplom.Models.Repositories.Abstract;
 using Diplom.Models.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -39,8 +40,9 @@ namespace Diplom.Controllers
         }
         [HttpPut]
         [Authorize]
-        public async Task<ActionResult<UserResponse>> Put(MyUser user)
+        public async Task<ActionResult<UserResponse>> Put(UserQuery user)
         {
+            user.Id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (user is null)
             {
                 return BadRequest();
@@ -58,7 +60,7 @@ namespace Diplom.Controllers
             await repository.Delete(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             return Ok();
         }
-        [HttpPost]
+        [HttpPost("photo")]
         [Authorize]
         public async Task<ActionResult<object>> UpdateUserPhoto(IFormFile file)
         {

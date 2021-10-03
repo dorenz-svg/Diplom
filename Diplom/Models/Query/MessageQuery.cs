@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Diplom.Models.Query
@@ -16,8 +17,10 @@ namespace Diplom.Models.Query
         [BindRequired]
         public DateTime Time { get; set; }
         [BindNever]
+        [JsonIgnore]
         public string IdSender { get; set; }
         [BindNever]
+        [JsonIgnore]
         public List<string> PhotosPath { get; set; }
         public IFormFileCollection File { get; set; }
     }
