@@ -28,9 +28,9 @@ namespace Diplom.Controllers
             return Ok();
         }
         [HttpGet("get")]
-        public async Task<ActionResult<IEnumerable<DialogResponse>>> GetDialogs()
+        public async Task<IEnumerable<DialogResponse>> GetDialogs()
         {
-            return Ok(await repository.GetDialogs(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+            return await repository.GetDialogs(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
         [HttpGet("getusers")]
         public async Task<ActionResult<IEnumerable<UserResponse>>> GetUsersDialogs(long id)
