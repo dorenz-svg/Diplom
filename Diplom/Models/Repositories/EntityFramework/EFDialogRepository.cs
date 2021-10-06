@@ -15,7 +15,7 @@ namespace Diplom.Models.Repositories.EntityFramework
         private readonly DBContext context;
         public EFDialogRepository(DBContext ctx) => context = ctx;
 
-        public async Task CreateDialog(string userId1, string userId2,string name)
+        public async Task CreateDialog(string userId1, string userId2, string name)
         {
             var dialog = new Dialogs { Id = 0, Name = name, Time = DateTime.UtcNow, };
             var user1 = context.Users.Find(userId1);
@@ -28,20 +28,24 @@ namespace Diplom.Models.Repositories.EntityFramework
 
         public async Task DeleteDialog(long id)
         {
-            var temp =context.Dialogs.Include(x=>x.Messages).ThenInclude(c=>c.MessageStatus).FirstOrDefault(x=>x.Id==id);
+            var temp = context.Dialogs.Include(x => x.Messages).ThenInclude(c => c.MessageStatus).FirstOrDefault(x => x.Id == id);
             context.Dialogs.Remove(temp);
             await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<DialogResponse>> GetDialogs(string id)
         {
-            var temp = (from x in context.Dialogs.Include(x => x.Users).Include(x=>x.Messages)
+            var temp = (from x in context.Dialogs.Include(x => x.Users).Include(x => x.Messages)
                         from user in x.Users
                         where user.Id == id
-                        select new DialogResponse{Id=x.Id,Name=x.Name,
-                            Message= x.Messages.Select(c=> 
-                            new Message { Id = c.Id, Text = c.Text, Time = c.Time, UserName = user.UserName })
-                            .FirstOrDefault()}).ToList();
+                        select new DialogResponse
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Message = x.Messages.Select(c =>
+                             new Message { Id = c.Id, Text = c.Text, Time = c.Time, UserName = user.UserName })
+                            .FirstOrDefault()
+                        }).ToList();
             return await Task.FromResult(temp);
         }
 
@@ -50,11 +54,11 @@ namespace Diplom.Models.Repositories.EntityFramework
             var temp = (from x in context.Users.Include(x => x.Dialogs)
                         from c in x.Dialogs
                         where c.Id == id
-                        select new UserResponse {Id=x.Id,UserName=x.UserName,Email=x.Email,Phone=x.PhoneNumber }).ToList();
+                        select new UserResponse { Id = x.Id, UserName = x.UserName, Email = x.Email, Phone = x.PhoneNumber }).ToList();
             return await Task.FromResult(temp);
-        }        
+        }
 
-        public async Task UpdateDialog(long id,string name)
+        public async Task UpdateDialog(long id, string name)
         {
             var temp = context.Dialogs.Find(id);
             temp.Name = name;

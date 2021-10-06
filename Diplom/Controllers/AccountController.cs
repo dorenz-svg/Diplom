@@ -28,6 +28,11 @@ namespace Diplom.Controllers
             _jwtGenerator = jwtGenerator;
             _context = context;
         }
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<object>> LoginAsync(LoginQuery query)

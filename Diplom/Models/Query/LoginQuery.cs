@@ -4,6 +4,9 @@ namespace Diplom.Models.Query
 {
     public class LoginQuery
     {
+        /// <summary>
+        /// Email
+        /// </summary>
         [BindRequired]
         public string Email { get; set; }
         [BindRequired]

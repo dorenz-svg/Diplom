@@ -50,7 +50,12 @@ namespace Diplom.Controllers
             await repository.Update(query);
             return Ok();
         }
-
+        [HttpDelete]
+        public async Task<ActionResult> DeleteMessage(long id)
+        {
+            await repository.Delete(id);
+            return Ok();
+        }
 
     }
 }
