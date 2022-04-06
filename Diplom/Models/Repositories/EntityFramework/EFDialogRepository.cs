@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Diplom.Models.Repositories.EntityFramework
@@ -15,11 +14,11 @@ namespace Diplom.Models.Repositories.EntityFramework
         private readonly DBContext context;
         public EFDialogRepository(DBContext ctx) => context = ctx;
 
-        public async Task CreateDialog(string userId1, string userId2, string name)
+        public async Task CreateDialog(string userId1, string userName, string name)
         {
             var dialog = new Dialogs { Id = 0, Name = name, Time = DateTime.UtcNow, };
             var user1 = context.Users.Find(userId1);
-            var user2 = context.Users.Find(userId2);
+            var user2 = await context.Users.FirstOrDefaultAsync(x=>x.UserName == userName);
             context.Dialogs.Add(dialog);
             dialog.Users.Add(user1);
             dialog.Users.Add(user2);

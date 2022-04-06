@@ -13,9 +13,9 @@ namespace Diplom.Infrastructure
     {
         private readonly SymmetricSecurityKey _key;
 
-        public JwtGenerator(IConfiguration config)
+        public JwtGenerator()
         {
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
         }
         public string CreateToken(MyUser user)
         {

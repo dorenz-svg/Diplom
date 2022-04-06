@@ -44,6 +44,7 @@ namespace Diplom.Models.Repositories.EntityFramework
                         where user.Id == id
                         select new UserResponse { Id = user.Id,
                             UserName = user.UserName,
+                            Email = user.Email,
                             ProfilePhoto= user.Photos.Path != null? configuration.GetConnectionString("ApplicationUrl") + user.Photos.Path:null,
                             UserPosts= user.Posts.Select(x=>new UserPosts { Id=x.Id,
                                                                             Text=x.Text,

@@ -27,11 +27,13 @@ namespace Diplom.Controllers
         }
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<UserResponse>> Get(string id)
+        public async Task<ActionResult<object>> Get(string id)
         {
             if (id is null)
             {
-                return Ok(await repository.Get(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+                var temp = await repository.Get(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                temp.ProfilePhoto = "https://avatars.mds.yandex.net/get-zen_doc/1866022/pub_5cc558ba536f2100b323e4e3_5cc55bee15df6000b3c20fae/scale_1200";
+                return Ok(temp);
             }
             else
             {
